@@ -1,0 +1,90 @@
+# .github/workflows/fabric-deploy.yml
+# Triggers only on test and main branches — NOT on dev
+ 
+name: Fabric CI/CD Deploy
+ 
+on:
+  push:
+    branches:
+      - test
+      - main
+    paths:
+      - 'fabric/**'
+ 
+  workflow_dispatch:
+    inputs:
+      items_in_scope:
+        description: 'Fabric item types to deploy'
+        required: false
+        default: '["Notebook","DataPipeline","Lakehouse","SemanticModel","Report","VariableLibrary"]'
+ 
+env:
+  PYTHON_VERSION: '3.12'
+ 
+jobs:
+  deploy:
+    name: Deploy to Fabric
+    runs-on: ubuntu-latest
+ 
+    # Maps branch to GitHub Environment for approval gates
+    # main → 'production'   test → 'test'
+    environment: >-
+      ${{ github.ref_name == 'main' && 'production' || 'test' }}
+ 
+    env:
+      # Secrets — SP credentials (masked in logs)
+      AZURE_TENANT_ID:     ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_CLIENT_ID:     ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      # Variables — workspace names (plain text)
+      # These are injected with exact same names as GitHub Variables
+      DEV_WORKSPACE_NAME:  ${{ vars.DEV_WORKSPACE_NAME }}
+      TEST_WORKSPACE_NAME: ${{ vars.TEST_WORKSPACE_NAME }}
+      PROD_WORKSPACE_NAME: ${{ vars.PROD_WORKSPACE_NAME }}
+      GIT_DIRECTORY:       ${{ vars.GIT_DIRECTORY }}
+ 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+ 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+ 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install fabric-cicd azure-identity requests
+ 
+      # Determine target environment from branch name
+      # test branch → TARGET_ENV=test
+      # main branch → TARGET_ENV=prod
+      - name: Set target environment
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "TARGET_ENV=prod" >> $GITHUB_ENV
+          else
+            echo "TARGET_ENV=test" >> $GITHUB_ENV
+          fi
+ 
+      # Pass items_in_scope via env to avoid quote conflicts
+      - name: Deploy Fabric items
+        env:
+          ITEMS: ${{ github.event.inputs.items_in_scope || '["Notebook","DataPipeline","Lakehouse","SemanticModel","Report","VariableLibrary"]' }}
+        run: |
+          python .deploy/deploy-to-fabric.py \
+            --aztenantid    "$AZURE_TENANT_ID" \
+            --azclientid    "$AZURE_CLIENT_ID" \
+            --azspsecret    "$AZURE_CLIENT_SECRET" \
+            --target_env    "$TARGET_ENV" \
+            --items_in_scope "$ITEMS"
+ 
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo '## Deployment Summary' >> $GITHUB_STEP_SUMMARY
+          echo "| Branch | ${{ github.ref_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Environment | $TARGET_ENV |" >> $GITHUB_STEP_SUMMARY
+          echo "| Status | ${{ job.status }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Triggered by | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
