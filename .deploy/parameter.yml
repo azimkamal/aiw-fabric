@@ -1,0 +1,13 @@
+find_replace:
+ 
+  # DEV Workspace GUID
+  - find_value: "ccb26ac4-9887-4f7d-892e-2d3d972b14ff"
+    replace_value:
+      test: "$workspace.$id"
+      prod: "$workspace.$id"
+ 
+  # source Lakehouse
+  - find_value: "c0f689d9-8f35-4699-b478-949faa2c5870"
+    replace_value:
+      test: "$items.Lakehouse.source.$id"
+      prod: "$items.Lakehouse.source.$id"
