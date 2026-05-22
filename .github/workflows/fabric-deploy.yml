@@ -16,7 +16,7 @@ on:
       items_in_scope:
         description: 'Fabric item types to deploy'
         required: false
-        default: '["Notebook","DataPipeline","Lakehouse","SemanticModel","Report","VariableLibrary"]'
+        default: '["DataPipeline","Lakehouse","SemanticModel","Report","VariableLibrary"]'
  
 env:
   PYTHON_VERSION: '3.12'
