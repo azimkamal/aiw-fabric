@@ -27,7 +27,7 @@ env:
   # This list is used when the workflow fires from a PR merge
   # (not from a manual workflow_dispatch run).
   # To permanently add or remove an item type, edit this list.
-  DEFAULT_ITEMS: 'Notebook,DataPipeline,Lakehouse,SemanticModel,Report,VariableLibrary,Environment,Dataflow,DataAgent,Warehouse,Ontology,SparkJobDefinition,Eventhouse,KQLDatabase,KQLQueryset,Eventstream,CopyJob,MirroredDatabase'
+  DEFAULT_ITEMS: 'DataPipeline,Lakehouse,SemanticModel,Report,VariableLibrary,Environment,Dataflow,DataAgent,Warehouse,Ontology,SparkJobDefinition,Eventhouse,KQLDatabase,KQLQueryset,Eventstream,CopyJob,MirroredDatabase'
 
 jobs:
   deploy:
