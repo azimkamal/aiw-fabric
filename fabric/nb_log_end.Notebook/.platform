@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_log_end",
+    "description": "Logger notebook - called by Fabric Pipeline at END of every run (both success and failure paths). Updates batch_control and pipeline_run_log with final status."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ff7a248d-c9ab-9439-43c0-daf8e1b29dda"
+  }
+}

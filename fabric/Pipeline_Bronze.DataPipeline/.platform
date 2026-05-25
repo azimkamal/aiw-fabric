@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Pipeline_Bronze",
+    "description": "Bronze ingestion pipeline. Generates batch_id, calls nb_log_start, nb_01_bronze_ingest, then nb_log_end on both success and failure paths."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4f73a07c-2d95-8557-4fbd-b8d2dc3150cd"
+  }
+}

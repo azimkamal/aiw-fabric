@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Pipeline_Silver",
+    "description": "Silver transformation pipeline. Calls nb_02_silver_transform which auto-discovers unprocessed Bronze batches, then calls nb_log_end on both success and failure paths."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f18aa549-ef3b-847c-4f55-b1f2cbbbd839"
+  }
+}

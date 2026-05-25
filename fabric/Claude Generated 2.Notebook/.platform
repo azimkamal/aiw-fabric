@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "Claude Generated 2"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8a632a28-e428-a419-4d50-4f61fceb123c"
+  }
+}

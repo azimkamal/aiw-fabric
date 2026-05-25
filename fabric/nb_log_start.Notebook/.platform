@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_log_start",
+    "description": "Logger notebook - called by Fabric Pipeline at START of every run. Writes RUNNING to batch_control and pipeline_run_log."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6898cfdd-4c38-ac42-4a21-9202ae1bf2e6"
+  }
+}

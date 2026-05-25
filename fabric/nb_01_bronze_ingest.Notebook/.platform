@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_01_bronze_ingest",
+    "description": "Pure Bronze ingestion notebook. No logging inside. Read raw source, attach audit columns, write to Bronze Delta table. Returns row counts as exit value."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5acbcd18-d071-b73c-4b92-a00e892e7b35"
+  }
+}

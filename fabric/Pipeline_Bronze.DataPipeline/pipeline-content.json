@@ -1,0 +1,296 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "batch_id",
+          "value": {
+            "value": "@guid()",
+            "type": "Expression"
+          }
+        },
+        "name": "Set_batch_id"
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "pipeline_name",
+          "value": "bronze_ingest_sales"
+        },
+        "name": "Set_pipeline_name",
+        "dependsOn": [
+          {
+            "activity": "Set_batch_id",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "source_file",
+          "value": "Files/raw/sales.csv"
+        },
+        "name": "Set_source_file",
+        "dependsOn": [
+          {
+            "activity": "Set_pipeline_name",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "6898cfdd-4c38-ac42-4a21-9202ae1bf2e6",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batch_id": {
+              "value": {
+                "value": "@variables('batch_id')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pipeline_name": {
+              "value": {
+                "value": "@variables('pipeline_name')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "layer": {
+              "value": "BRONZE",
+              "type": "string"
+            },
+            "source_system": {
+              "value": "source_system",
+              "type": "string"
+            },
+            "source_file": {
+              "value": {
+                "value": "@variables('source_file')",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "name": "nb_log_start",
+        "dependsOn": [
+          {
+            "activity": "Set_source_file",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "5acbcd18-d071-b73c-4b92-a00e892e7b35",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batch_id": {
+              "value": {
+                "value": "@variables('batch_id')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pipeline_name": {
+              "value": {
+                "value": "@variables('pipeline_name')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "source_file": {
+              "value": {
+                "value": "@variables('source_file')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "source_system": {
+              "value": "source_system",
+              "type": "string"
+            }
+          }
+        },
+        "name": "nb_01_bronze_ingest",
+        "dependsOn": [
+          {
+            "activity": "nb_log_start",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "ff7a248d-c9ab-9439-43c0-daf8e1b29dda",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batch_id": {
+              "value": {
+                "value": "@variables('batch_id')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pipeline_name": {
+              "value": {
+                "value": "@variables('pipeline_name')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "layer": {
+              "value": "BRONZE",
+              "type": "string"
+            },
+            "source_system": {
+              "value": "source_system",
+              "type": "string"
+            },
+            "status": {
+              "value": "SUCCESS",
+              "type": "string"
+            },
+            "rows_read": {
+              "value": {
+                "value": "@json(activity('nb_01_bronze_ingest').output.result.exitValue).rows_read",
+                "type": "Expression"
+              },
+              "type": "int"
+            },
+            "rows_written": {
+              "value": {
+                "value": "@json(activity('nb_01_bronze_ingest').output.result.exitValue).rows_written",
+                "type": "Expression"
+              },
+              "type": "int"
+            },
+            "rows_failed": {
+              "value": "0",
+              "type": "int"
+            },
+            "error_message": {
+              "value": "",
+              "type": "string"
+            },
+            "run_start_str": {
+              "value": {
+                "value": "@activity('nb_log_start').output.result.exitValue",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "name": "nb_log_end_success",
+        "dependsOn": [
+          {
+            "activity": "nb_01_bronze_ingest",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "ff7a248d-c9ab-9439-43c0-daf8e1b29dda",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batch_id": {
+              "value": {
+                "value": "@variables('batch_id')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pipeline_name": {
+              "value": {
+                "value": "@variables('pipeline_name')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "layer": {
+              "value": "BRONZE",
+              "type": "string"
+            },
+            "source_system": {
+              "value": "source_system",
+              "type": "string"
+            },
+            "status": {
+              "value": "FAILED",
+              "type": "string"
+            },
+            "rows_read": {
+              "value": "0",
+              "type": "int"
+            },
+            "rows_written": {
+              "value": "0",
+              "type": "int"
+            },
+            "rows_failed": {
+              "value": "0",
+              "type": "int"
+            },
+            "error_message": {
+              "value": {
+                "value": "@activity('nb_01_bronze_ingest').error.message",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "run_start_str": {
+              "value": {
+                "value": "@activity('nb_log_start').output.result.exitValue",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "name": "nb_log_end_failure",
+        "dependsOn": [
+          {
+            "activity": "nb_01_bronze_ingest",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      }
+    ],
+    "variables": {
+      "batch_id": {
+        "type": "String",
+        "defaultValue": ""
+      },
+      "pipeline_name": {
+        "type": "String",
+        "defaultValue": "bronze_ingest_sales"
+      },
+      "source_file": {
+        "type": "String",
+        "defaultValue": "Files/raw/sales.csv"
+      }
+    }
+  }
+}

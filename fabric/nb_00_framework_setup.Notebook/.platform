@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_00_framework_setup",
+    "description": "Run once to bootstrap pipeline_control, batch_control and pipeline_run_log tables."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "98065a52-8003-80c2-499f-0e6c18ad0f36"
+  }
+}
