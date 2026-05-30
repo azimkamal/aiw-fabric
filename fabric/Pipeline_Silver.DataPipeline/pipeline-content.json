@@ -1,0 +1,259 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "pipeline_name",
+          "value": "silver_transform_sales"
+        },
+        "name": "Set_pipeline_name"
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "batch_id",
+          "value": {
+            "type": "Expression",
+            "value": "@guid()"
+          }
+        },
+        "name": "Set_batch_id",
+        "dependsOn": [
+          {
+            "activity": "Set_pipeline_name",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "6898cfdd-4c38-ac42-4a21-9202ae1bf2e6",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batch_id": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_id')"
+              }
+            },
+            "layer": {
+              "type": "string",
+              "value": "SILVER"
+            },
+            "pipeline_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('pipeline_name')"
+              }
+            },
+            "source_file": {
+              "type": "string",
+              "value": ""
+            },
+            "source_system": {
+              "type": "string",
+              "value": "source_system"
+            }
+          }
+        },
+        "name": "nb_log_start",
+        "dependsOn": [
+          {
+            "activity": "Set_batch_id",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "488da6df-2754-b616-4408-56df617f1afc",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "pipeline_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('pipeline_name')"
+              }
+            },
+            "source_system": {
+              "type": "string",
+              "value": "source_system"
+            }
+          }
+        },
+        "name": "nb_02_silver_transform",
+        "dependsOn": [
+          {
+            "activity": "nb_log_start",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "ff7a248d-c9ab-9439-43c0-daf8e1b29dda",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batch_id": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_id')"
+              }
+            },
+            "error_message": {
+              "type": "string",
+              "value": ""
+            },
+            "layer": {
+              "type": "string",
+              "value": "SILVER"
+            },
+            "pipeline_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('pipeline_name')"
+              }
+            },
+            "rows_failed": {
+              "type": "int",
+              "value": "0"
+            },
+            "rows_read": {
+              "type": "int",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('nb_02_silver_transform').output.result.exitValue).rows_read"
+              }
+            },
+            "rows_written": {
+              "type": "int",
+              "value": {
+                "type": "Expression",
+                "value": "@json(activity('nb_02_silver_transform').output.result.exitValue).rows_written"
+              }
+            },
+            "run_start_str": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@activity('nb_log_start').output.result.exitValue"
+              }
+            },
+            "source_system": {
+              "type": "string",
+              "value": "source_system"
+            },
+            "status": {
+              "type": "string",
+              "value": "SUCCESS"
+            }
+          }
+        },
+        "name": "nb_log_end_success",
+        "dependsOn": [
+          {
+            "activity": "nb_02_silver_transform",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "ff7a248d-c9ab-9439-43c0-daf8e1b29dda",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batch_id": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('batch_id')"
+              }
+            },
+            "error_message": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@activity('nb_02_silver_transform').error.message"
+              }
+            },
+            "layer": {
+              "type": "string",
+              "value": "SILVER"
+            },
+            "pipeline_name": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@variables('pipeline_name')"
+              }
+            },
+            "rows_failed": {
+              "type": "int",
+              "value": "0"
+            },
+            "rows_read": {
+              "type": "int",
+              "value": "0"
+            },
+            "rows_written": {
+              "type": "int",
+              "value": "0"
+            },
+            "run_start_str": {
+              "type": "string",
+              "value": {
+                "type": "Expression",
+                "value": "@activity('nb_log_start').output.result.exitValue"
+              }
+            },
+            "source_system": {
+              "type": "string",
+              "value": "source_system"
+            },
+            "status": {
+              "type": "string",
+              "value": "FAILED"
+            }
+          }
+        },
+        "name": "nb_log_end_failure",
+        "dependsOn": [
+          {
+            "activity": "nb_02_silver_transform",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      }
+    ],
+    "variables": {
+      "batch_id": {
+        "type": "String",
+        "defaultValue": ""
+      },
+      "pipeline_name": {
+        "type": "String",
+        "defaultValue": "silver_transform_sales"
+      }
+    }
+  }
+}

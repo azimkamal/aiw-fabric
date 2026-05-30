@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_02_silver_transform",
+    "description": "Pure Silver transformation notebook. No logging inside. Discovers unprocessed Bronze batches, cleanses and loads into Silver. Returns row counts."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "488da6df-2754-b616-4408-56df617f1afc"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Pipeline_Gold",
+    "description": "Gold load pipeline. Calls nb_03_gold_load which auto-discovers unprocessed Silver batches, applies dimensional/fact logic, then calls nb_log_end on both success and failure paths."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9b96f719-26cd-9911-44c8-13f549cd3b41"
+  }
+}

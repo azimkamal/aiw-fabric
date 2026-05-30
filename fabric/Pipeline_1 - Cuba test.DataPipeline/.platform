@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Pipeline_1 - Cuba test"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "712d05e9-df96-b7d3-4471-18879488aa19"
+  }
+}
